@@ -47,16 +47,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   </head>
   <body>
-  <?php for($i=0; $i < count($hotels); $i++) { ?>
-    <ul>
-      <li> <?php echo $hotels[$i]["name"]; ?></li>
-      <li> <?php echo $hotels[$i]["description"]; ?></li>
-      <li> <?php echo $hotels[$i]["parking"]; ?></li>
-      <li> <?php echo $hotels[$i]["vote"]; ?></li>
-      <li> <?php echo $hotels[$i]["distance_to_center"]; ?></li>
-    </ul>
-  <?php } ?>
+    <main class="d-flex justify-content-center align-items-center mt-5">
+      <table class="table table-dark">
+        <thead>
+          <tr>
+            <th>Nome Hotel</th>
+            <th>Descrizione</th>
+            <th>Parcheggio</th>
+            <th>Voto</th>
+            <th>Distanza dal Centro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php for($i=0; $i < count($hotels); $i++) { ?>
+            <tr>
+              <th> <?php echo $hotels[$i]["name"]; ?></td>
+              <td> <?php echo $hotels[$i]["description"]; ?></td>
+              <td> <?php echo $hotels[$i]["parking"] ? "Si" : "No"; ?></td>
+              <td> <?php echo $hotels[$i]["vote"]; ?></td>
+              <td> <?php echo $hotels[$i]["distance_to_center"]." km"; ?></td>
+            </tr>
+          <?php } ?>
+        </tbody>
+      </table>
+    </main>
   </body>
 </html>
