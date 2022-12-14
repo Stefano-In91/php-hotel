@@ -39,6 +39,7 @@
   ];
 
   $parking = $_GET["parking"];
+  $vote = (int)$_GET["vote"];
 
 ?>
 
@@ -53,19 +54,29 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   </head>
   <body>
+    <!-- Form di selezione in GET -->
     <header class="m-5">
       <form action="index.php">
         <div class="form-group">
-          <label for="parking">Parcheggio Integrato?</label>
-          <select name="parking" id="parking" class="form-control mt-2 mb-2">
+          <label class="mt-1" for="parking">Parcheggio Integrato?</label>
+          <select name="parking" id="parking" class="form-control mt-1 mb-1">
             <option value="both">Entrambi</option>
             <option value="true">Si</option>
             <option value="false">No</option>
+          </select>
+          <label class="mt-1" for="vote">Selezionare voto minimo.</label>
+          <select name="vote" id="vote" class="form-control mt-1 mb-1">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
           </select>
           <button class="btn btn-dark">Invia</button>
         </div>
       </form>
     </header>
+    <!-- Tabella -->
     <main class="m-5">
       <table class="table table-dark">
         <thead>
@@ -78,25 +89,31 @@
           </tr>
         </thead>
         <tbody>
+          <!-- Inserimento dati php -->
           <?php if (!isset($parking) || $parking == "both") { 
-            for($i=0; $i < count($hotels); $i++) { ?>
-              <tr>
-                <th> <?php echo $hotels[$i]["name"]; ?></td>
-                <td> <?php echo $hotels[$i]["description"]; ?></td>
-                <td> <?php echo $hotels[$i]["parking"] ? "Si" : "No"; ?></td>
-                <td> <?php echo $hotels[$i]["vote"]; ?></td>
-                <td> <?php echo $hotels[$i]["distance_to_center"]." km"; ?></td>
-              </tr>
-          <?php }} else {
+            for($i=0; $i < count($hotels); $i++) { 
+              if (!isset($vote) || (isset($vote) && (int)$hotels[$i]["vote"] >= $vote) ) { 
+          ?>
+            <tr>
+              <th> <?php echo $hotels[$i]["name"]; ?></td>
+              <td> <?php echo $hotels[$i]["description"]; ?></td>
+              <td> <?php echo $hotels[$i]["parking"] ? "Si" : "No"; ?></td>
+              <td> <?php echo $hotels[$i]["vote"]; ?></td>
+              <td> <?php echo $hotels[$i]["distance_to_center"]." km"; ?></td>
+            </tr>
+          <?php }}} 
+          else {
             for($i=0; $i < count($hotels); $i++) {
-              if($parking == ($hotels[$i]["parking"] ? "true" : "false")) { ?>
-                <tr>
-                  <th> <?php echo $hotels[$i]["name"]; ?></td>
-                  <td> <?php echo $hotels[$i]["description"]; ?></td>
-                  <td> <?php echo $hotels[$i]["parking"] ? "Si" : "No"; ?></td>
-                  <td> <?php echo $hotels[$i]["vote"]; ?></td>
-                  <td> <?php echo $hotels[$i]["distance_to_center"]." km"; ?></td>
-                </tr>            
+              if($parking == ($hotels[$i]["parking"] ? "true" : "false") && 
+                (!isset($vote) || (int)$hotels[$i]["vote"] >= $vote) ) {
+          ?>
+            <tr>
+              <th> <?php echo $hotels[$i]["name"]; ?></td>
+              <td> <?php echo $hotels[$i]["description"]; ?></td>
+              <td> <?php echo $hotels[$i]["parking"] ? "Si" : "No"; ?></td>
+              <td> <?php echo $hotels[$i]["vote"]; ?></td>
+              <td> <?php echo $hotels[$i]["distance_to_center"]." km"; ?></td>
+            </tr>            
           <?php }}}?>
         </tbody>
       </table>
