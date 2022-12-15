@@ -38,8 +38,24 @@
     ],
   ];
 
+  $filtered_hotels = [];
+
   $parking = $_GET["parking"];
   $vote = (int)$_GET["vote"];
+
+  if ( !isset($parking) || $parking == "both") {
+    foreach($hotels as $hotel) {
+      if ( !isset($vote) || (isset($vote) && (int)$hotel["vote"] >= $vote) ) {
+        $filtered_hotels[] = $hotel;
+      }
+    }
+  } else {
+    foreach( $hotels as $hotel) {
+      if($parking == $hotel["parking"] && (!isset($vote) || (int)$hotel["vote"] >= $vote) ) {
+        $filtered_hotels[] = $hotel;
+      }
+    }
+  }
 
 ?>
 
@@ -61,8 +77,8 @@
           <label class="mt-1" for="parking">Parcheggio Integrato?</label>
           <select name="parking" id="parking" class="form-control mt-1 mb-1">
             <option value="both">Entrambi</option>
-            <option value="true">Si</option>
-            <option value="false">No</option>
+            <option value="1">Si</option>
+            <option value="0">No</option>
           </select>
           <label class="mt-1" for="vote">Selezionare voto minimo.</label>
           <select name="vote" id="vote" class="form-control mt-1 mb-1">
@@ -90,31 +106,15 @@
         </thead>
         <tbody>
           <!-- Inserimento dati php -->
-          <?php if (!isset($parking) || $parking == "both") { 
-            for($i=0; $i < count($hotels); $i++) { 
-              if (!isset($vote) || (isset($vote) && (int)$hotels[$i]["vote"] >= $vote) ) { 
-          ?>
+          <?php foreach( $filtered_hotels as $hotel) { ?>
             <tr>
-              <th> <?php echo $hotels[$i]["name"]; ?></td>
-              <td> <?php echo $hotels[$i]["description"]; ?></td>
-              <td> <?php echo $hotels[$i]["parking"] ? "Si" : "No"; ?></td>
-              <td> <?php echo $hotels[$i]["vote"]; ?></td>
-              <td> <?php echo $hotels[$i]["distance_to_center"]." km"; ?></td>
+              <th> <?php echo $hotel["name"]; ?></td>
+              <td> <?php echo $hotel["description"]; ?></td>
+              <td> <?php echo $hotel["parking"] ? "Si" : "No"; ?></td>
+              <td> <?php echo $hotel["vote"]; ?></td>
+              <td> <?php echo $hotel["distance_to_center"]." km"; ?></td>
             </tr>
-          <?php }}} 
-          else {
-            for($i=0; $i < count($hotels); $i++) {
-              if($parking == ($hotels[$i]["parking"] ? "true" : "false") && 
-                (!isset($vote) || (int)$hotels[$i]["vote"] >= $vote) ) {
-          ?>
-            <tr>
-              <th> <?php echo $hotels[$i]["name"]; ?></td>
-              <td> <?php echo $hotels[$i]["description"]; ?></td>
-              <td> <?php echo $hotels[$i]["parking"] ? "Si" : "No"; ?></td>
-              <td> <?php echo $hotels[$i]["vote"]; ?></td>
-              <td> <?php echo $hotels[$i]["distance_to_center"]." km"; ?></td>
-            </tr>            
-          <?php }}}?>
+          <?php } ?>
         </tbody>
       </table>
     </main>
